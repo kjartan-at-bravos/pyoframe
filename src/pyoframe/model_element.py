@@ -215,7 +215,11 @@ class ModelElementWithId(ModelElement, AttrContainerMixin):
                 assert (
                     dims is not None
                 ), "Attribute must be a scalar since there are no dimensions"
-                result = value.join(ids, on=dims, validate="1:1", how="inner").drop(
+                #result = value.join(ids, on=dims, validate="1:1", how="inner").drop(
+                #    dims
+                #)
+
+                result = value.join(ids, on=dims, how="inner").drop(
                     dims
                 )
                 assert len(result.columns) == 2, "Attribute has too many columns"
