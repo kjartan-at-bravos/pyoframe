@@ -43,7 +43,8 @@ def constraints_to_file(m: "Model", f: TextIOWrapper, var_map, const_map):
     for constraint in create_section(
         tqdm(m.constraints, desc="Writing constraints to file"), f, "s.t."
     ):
-        f.write(constraint.to_str(var_map=var_map, const_map=const_map) + "\n")
+        if len(constraint) > 0:
+            f.write(constraint.to_str(var_map=var_map, const_map=const_map) + "\n")
 
 
 def bounds_to_file(m: "Model", f, var_map):
