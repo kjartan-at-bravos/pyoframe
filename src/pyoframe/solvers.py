@@ -296,10 +296,41 @@ class GurobiSolver(FileBasedSolver):
     def solve(self, log_fn, warmstart_fn, basis_fn, solution_file) -> Result:
         assert self.solver_model is not None
         m = self.solver_model
+        # m.update() # In case attributes have been set on the variables.
+
         if log_fn is not None:
             m.setParam("logfile", _path_to_str(log_fn))
         if warmstart_fn:
             m.read(_path_to_str(warmstart_fn))
+
+        try:
+            if self._model.params.computeIIS:
+                print("Computing the IIS")
+                m.computeIIS()
+                print("\nThe following constraints and variables are in the IIS:")
+                for c in m.getConstrs():
+                    if c.IISConstr:
+                        print(f"\t{c.constrname}: {m.getRow(c)} {c.Sense} {c.RHS}")
+
+                for v in m.getVars():
+                    if v.IISLB:
+                        print(f"\t{v.varname} ≥ {v.LB}")
+                    if v.IISUB:
+                        print(f"\t{v.varname} ≤ {v.UB}")
+                # m.dispose()
+                return Result(None, None)
+        except KeyError:
+            pass # OK. The parameter is not set.
+
+        try:
+            if self._model.params.feasRelax:
+                print("Obtaining the feasibilty relaxation")
+                if m.feasRelaxS(relaxobjtype=1, minrelax=False, vrelax=False, crelax=True) < 0:
+                    raise ValueError("Not able to find feasibilty relaxation")
+
+        except KeyError:
+            pass # OK. The parameter is not set.
+
 
         m.optimize()
 
