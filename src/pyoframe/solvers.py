@@ -252,6 +252,7 @@ class GurobiSolver(FileBasedSolver):
 
         return m
 
+
     @lru_cache
     def _get_var_mapping(self):
         assert self.solver_model is not None
@@ -275,11 +276,17 @@ class GurobiSolver(FileBasedSolver):
         elif isinstance(element, pf.Variable):
             v, v_map = self._get_var_mapping()
             param_value = param_value.join(v_map, on=VAR_KEY, how="left").drop(VAR_KEY)
-            self.solver_model.setAttr(
-                param_name,
-                [v[i] for i in param_value["i"]],
-                param_value[param_name],
-            )
+            if len(param_value) > 0:
+                try:
+                    self.solver_model.setAttr(
+                        param_name,
+                            [v[i] for i in param_value["i"]],
+                        param_value[param_name],
+                    )
+                except:
+                    breakpoint()
+            else:
+                breakpoint()
         elif isinstance(element, pf.Constraint):
             c, c_map = self._get_constraint_mapping()
             param_value = param_value.join(c_map, on=CONSTRAINT_KEY, how="left").drop(

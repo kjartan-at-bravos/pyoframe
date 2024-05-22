@@ -201,8 +201,10 @@ class ModelElementWithId(ModelElement, AttrContainerMixin):
 
         if new_col in original.columns:
             original = original.drop(new_col)
-        self._data = original.join(addition, on=id_col, how="left", validate="1:1")
-
+        try:
+            self._data = original.join(addition, on=id_col, how="left", validate="1:1")
+        except pl.exceptions.ComputeError:
+            breakpoint()
     def _preprocess_attr(self, name: str, value: Any) -> Any:
         dims = self.dimensions
         ids = self.ids
