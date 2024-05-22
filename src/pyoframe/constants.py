@@ -54,6 +54,7 @@ class Config(metaclass=_ConfigMeta):
     print_max_set_elements: int = 50
     enable_is_duplicated_expression_safety_check: bool = False
 
+
     @classmethod
     def reset_defaults(cls):
         """

@@ -47,6 +47,7 @@ def constraints_to_file(m: "Model", f: TextIOWrapper, var_map, const_map):
             f.write(constraint.to_str(var_map=var_map, const_map=const_map) + "\n")
 
 
+
 def bounds_to_file(m: "Model", f, var_map):
     """
     Write out variables of a model to a lp file.

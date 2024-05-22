@@ -107,6 +107,7 @@ class Model(AttrContainerMixin):
                     self.var_map.add(__value)
             elif isinstance(__value, Constraint):
                 self._constraints.append(__value)
+
         return super().__setattr__(__name, __value)
 
     def __repr__(self) -> str:
