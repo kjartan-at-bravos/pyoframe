@@ -67,7 +67,8 @@ class Mapper(ABC):
         df = df.rename({self._ID_COL: Mapper.NAME_COL})
         return df.join(
             self.mapping_registry, on=Mapper.NAME_COL, how="left", validate="m:1"
-        ).drop(Mapper.NAME_COL)
+        ).drop(Mapper.NAME_COL).drop_nulls() # The drop_nulls is a hack to handle gurobi changing var names from upper case to lower case
+
 
 
 class NamedMapper(Mapper):

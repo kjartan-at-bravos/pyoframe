@@ -264,12 +264,9 @@ def dataframe_to_tupled_list(
     if elipse:
         res = res[:-1] + ", ...]"
     return res
-<<<<<<< HEAD
 
 
 @dataclass
 class FuncArgs:
     args: List
     kwargs: Dict = field(default_factory=dict)
-=======
->>>>>>> cef49a4 (Merged with origin)
